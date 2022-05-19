@@ -1,20 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  
+<div fxLayout="column" fxLayoutAlign="center center" class="main">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <h3>Ionic SQLite</h3>
+
+  <h4>User Form</h4>
+  <form [formGroup]="userForm" (ngSubmit)="getData()">
+
+    <mat-form-field appearance="legacy">
+    <mat-label>Name</mat-label>
+    <input type="text" matInput placeholder="Enter your Name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="legacy">
+      <mat-label>Age</mat-label>
+      <input type="text" matInput placeholder="Enter your Age" formControlName="age">
+    </mat-form-field>
+
+      <mat-form-field appearance="legacy">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput placeholder="Enter your Email" formControlName="email">
+      </mat-form-field>
+
+        <mat-form-field appearance="legacy">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput placeholder="Enter your Password" formControlName="pass">
+        </mat-form-field>
+
+        <button mat-flat-button color="primary">Submit</button>
+</form>
+</div>
+
 </ion-content>
