@@ -6,7 +6,7 @@
   <h3>Ionic SQLite</h3>
 
   <h4>User Form</h4>
-  <form [formGroup]="userForm" (ngSubmit)="getData()">
+  <form [formGroup]="userForm" (ngSubmit)="getFormData()">
 
     <mat-form-field appearance="legacy">
     <mat-label>Name</mat-label>
@@ -30,6 +30,28 @@
 
         <button mat-flat-button color="primary">Submit</button>
 </form>
+
+<div class="data-table" *ngIf="data.length!=0">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age
+        </th>
+        <th>Email</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let user of data">
+      <td>{{user.name}}</td>
+      <td>{{user.age}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.pass}}</td>
+    </tbody>
+  </table>
+</div>
+
+
 </div>
 
 </ion-content>
