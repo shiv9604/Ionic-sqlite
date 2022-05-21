@@ -17,8 +17,8 @@ export class HomePage implements OnInit {
   });
 
   user:any = {}
+  usersData:any;
   constructor(public sql:SqliteService) {
-    console.log("App Init")
   }
 
   ngOnInit(){
@@ -29,11 +29,4 @@ export class HomePage implements OnInit {
     this.user = this.userForm.value
     console.log("User : ",this.user)
   }
-
-
-
-
-
-
-
 }

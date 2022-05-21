@@ -21,23 +21,20 @@ export class SqliteService {
   constructor(
     public sqlite: SQLite,
     public platform:Platform
-    ) { 
-    console.log("App Init")
+    ) 
+  {
+    this.waitForDBAndTable()
+
   }
 
-  async ngOnInit() {
-    try{
-      const init = await this.createDBAndTable()
-    // this.getRows()
-    } 
-    catch(e){
-      console.log("Error occured in ngOninit =>",e)
-    }
+  ngOnInit() {
+    
     
   }
-
-   createDBAndTable() {
+  
+  createDBAndTable() {
     this.platform.ready().then(()=>{
+      console.log("Device Ready")
       return new Promise((res,rej)=>{
         this.sqlite
         .create({
@@ -55,11 +52,11 @@ export class SqliteService {
           .executeSql(
             `
         CREATE TABLE IF NOT EXISTS ${this.table_name}  (
-          user_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          Name varchar(255),
-          Age int(3),
-          Email varchar(300),
-          Password varchar(400))
+          user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+          Name varchar(255) NOT NULL,
+          Age int(3) NOT NULL,
+          Email varchar(300) NOT NULL,
+          Password varchar(400) NOT NULL)
         `,
             []
           )
@@ -79,10 +76,28 @@ export class SqliteService {
     })
     .catch((e)=>{
       console.log("Platform error",e)
-    })
+    })    
+    
+  }
 
-    
-    
+  async waitForDBAndTable(){
+    try{
+
+      await this.createDBAndTable()
+    }
+    catch(e){
+
+      console.log("Error Occured While creating DB & Table",e)
+    }
+  }
+
+  getData(){
+     this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`)
+     
+  }
+
+  postData(id,name,email,pass){
+    return this.dbObj.executeSql(`INSERT INTO ${this.table_name}(${id},${name},${email},${pass})`)
   }
 
 }
