@@ -17,8 +17,8 @@ export class HomePage implements OnInit {
   });
 
   user:any = {}
+  usersData:any;
   constructor(public sql:SqliteService) {
-    console.log("App Init")
   }
 
   ngOnInit(){

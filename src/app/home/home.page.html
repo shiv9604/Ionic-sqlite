@@ -32,9 +32,17 @@
 </form>
 
 <div class="data-table">
+
+  <hr>
+
+  <H2 STYLE="text-align: center;">USERS</H2>
+  
+  <hr>
+
   <table>
     <thead>
       <tr>
+        <th>User Id</th>
         <th>Name</th>
         <th>Age
         </th>
@@ -42,7 +50,13 @@
         <th>Password</th>
       </tr>
     </thead>
-    <tbody *ngFor="let user of data">
+
+
+    <span *ngIf="usersData">
+      <tbody  *ngFor="let user of usersData">
+    </span>
+    <tbody #table *ngIf="!usersData">
+      <td>{{user.id ? user.id : 1}}</td>
       <td>{{user.name ? user.name : "Shiv"}}</td>
       <td>{{user.age ? user.age : "19"}}</td>
       <td>{{user.email ? user.email : "shivkounsalye@gmail.com"}}</td>
