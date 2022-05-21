@@ -109,7 +109,7 @@ export class HomePage implements OnInit {
       });
     }
     else{
-      console.log("Data not presen")
+      console.log("Data not present")
     }
   }
 
