@@ -24,17 +24,14 @@ export class SqliteService {
     ) 
   {
     this.waitForDBAndTable()
-
   }
 
   ngOnInit() {
-    
     
   }
   
   createDBAndTable() {
     this.platform.ready().then(()=>{
-      console.log("Device Ready")
       return new Promise((res,rej)=>{
         this.sqlite
         .create({
@@ -42,21 +39,23 @@ export class SqliteService {
           location: 'default',
         })
         .then((db: SQLiteObject) => {
+          console.log("Device is Compatible for Ionic Sqlite")
+
           this.dbObj = db;
+          this.isDbTableCreated = true;
           console.log(this.database_name, 'Database Created!');
           // console.log("DB Obj",this.dbObj)
-  
   
           // creating table
           this.dbObj
           .executeSql(
             `
         CREATE TABLE IF NOT EXISTS ${this.table_name}  (
-          user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-          Name varchar(255) NOT NULL,
-          Age int(3) NOT NULL,
-          Email varchar(300) NOT NULL,
-          Password varchar(400) NOT NULL)
+          user_id INTEGER NOT NULL AUTO_INCREMENT, 
+          Name varchar(100) NOT NULL,
+          Email varchar(100) NOT NULL,
+          Password varchar(100) NOT NULL)
+          PRIMARY_KEY(user_id)
         `,
             []
           )
@@ -65,17 +64,17 @@ export class SqliteService {
             res('')
           })
           .catch((e) => {
-            console.log('error ' + JSON.stringify(e));
+            console.log('Create Table error ' + JSON.stringify(e));
             rej('')
           });
         })
         .catch((e) => {
-          alert('error ' + JSON.stringify(e));
+          console.log('Create Database error ' + JSON.stringify(e));
         });
       })
     })
     .catch((e)=>{
-      console.log("Platform error",e)
+      console.log("Ionic Sqlite does not support to this device",JSON.stringify(e))
     })    
     
   }
@@ -87,17 +86,82 @@ export class SqliteService {
     }
     catch(e){
 
-      console.log("Error Occured While creating DB & Table",e)
+      console.log("Error Occured While creating DB & Table",JSON.stringify(e))
     }
   }
 
   getData(){
-     this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`)
+    if(this.isDbTableCreated){
+      let result;
+      let error;
+       this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`)
+       .then((res)=>{
+         result = res;
+         console.log("Response got sucessfully...",res)
+         return result;
+       })
+       .catch((e)=>{
+        error = e;
+        console.log("Error Occuerd while posting data",JSON.stringify(e))
+        return error;
+       })
+    }
+    else{
+      console.log("Database Not Created, Cant get Users Data")
+    }
+    
      
   }
 
-  postData(id,name,email,pass){
-    return this.dbObj.executeSql(`INSERT INTO ${this.table_name}(${id},${name},${email},${pass})`)
+  postData(name,email,pass){
+    if(this.isDbTableCreated){
+      this.dbObj.executeSql(`INSERT INTO ${this.table_name}(Name,Email, Password) VALUES(${name},${email},${pass})`)
+      .then((res)=>{
+        console.log("Data Posted Sucessfully...",res)
+        this.getData()
+      })
+      .catch((e)=>{
+        console.log("Error Occuerd while posting data",JSON.stringify(e))
+      })
+    }
+    else{
+      console.log("Database Not Created, Cant Post Users Data")
+    }
+     
+  }
+
+  deleteData(id){
+
+    if(this.isDbTableCreated){
+      this.dbObj.executeSql(`DELETE FROM ${this.table_name} WHERE ID=${id}`)
+      .then((res)=>{
+        console.log("Deleted From Table",res)
+        this.getData()
+      })
+      .catch((e)=>{
+        console.log("Failed to delete row",JSON.stringify(e))
+      })
+    }
+    else{
+      console.log("Database Not Created, Cant delete Users Data")
+    }
+  }
+
+  updateData(id,userObj){
+    if(this.isDbTableCreated){
+      this.dbObj.executeSql(`UPDATE ${this.table_name} SET Name=${userObj.name} Email=${userObj.email} Password=${userObj.pass} WHERE id=${id}`)
+      .then((res)=>{
+        console.log("User Updated Sucessfully...",res)
+        this.getData()
+      })
+      .catch((e)=>{
+        console.log("Failed to update user",JSON.stringify(e))
+      })
+    }
+    else{
+      console.log("Database Not Created, Cant Update Users Data")
+    }
+  
   }
 
 }

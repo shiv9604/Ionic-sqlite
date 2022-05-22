@@ -11,7 +11,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class HomePage implements OnInit {
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    age: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
     pass: new FormControl('', [Validators.required]),
   });
@@ -22,11 +21,24 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit(){
-
+    this.getUsers()
   }
 
-  getFormData(){
-    this.user = this.userForm.value
-    console.log("User : ",this.user)
+  async getUsers(){
+    this.usersData = await this.sql.getData()
   }
+
+  createUser(){
+    let {name,email,pass} = this.userForm.value
+    this.sql.postData(name,email,pass)
+  }
+
+  updateUser(id,userObj){
+    this.sql.updateData(id,userObj) 
+  }
+
+  deleteUser(id){
+    this.sql.deleteData(id)
+  }
+
 }
