@@ -1,6 +1,7 @@
+import { isDataSource } from '@angular/cdk/collections';
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
-import {Platform} from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -16,106 +17,141 @@ export class SqliteService {
   name_model: string = '';
   data: any = [];
   userInfo: any;
-  isDbTableCreated:boolean=false;
-  
+  isDbTableCreated: boolean = false;
+
   constructor(
     public sqlite: SQLite,
-    public platform:Platform
-    ) 
-  {
-    this.waitForDBAndTable()
-
+    public platform: Platform
+  ) {
+    this.waitForDBAndTable();
   }
 
   ngOnInit() {
-    
-    
+
   }
-  
+
   createDBAndTable() {
-    this.platform.ready().then(()=>{
-      console.log("Device Ready")
-      return new Promise((res,rej)=>{
-        this.sqlite
-        .create({
+    this.platform.ready().then(() => {
+      this.sqlite.create({
           name: this.database_name,
-          location: 'default',
+          location: 'default'
+        }).then((sqLite: SQLiteObject) => {
+          this.dbObj = sqLite;
+          sqLite.executeSql(`
+              CREATE TABLE IF NOT EXISTS ${this.table_name} (
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                name varchar(255),
+                pass varchar(255)
+              )`, [])
+            .then((res) => {
+              console.log(JSON.stringify(res));
+              this.isDbTableCreated = true
+              console.log("Table Created",this.isDbTableCreated)
+            })
+            .catch((error) => alert(JSON.stringify(error)));
+
         })
-        .then((db: SQLiteObject) => {
-          this.dbObj = db;
-          console.log(this.database_name, 'Database Created!');
-          // console.log("DB Obj",this.dbObj)
-  
-  
-          // creating table
-          this.dbObj
-          .executeSql(
-            `
-        CREATE TABLE IF NOT EXISTS ${this.table_name}  (
-          user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-          Name varchar(255) NOT NULL,
-          Age int(3) NOT NULL,
-          Email varchar(300) NOT NULL,
-          Password varchar(400) NOT NULL)
-        `,
-            []
-          )
-          .then(() => {
-            console.log('Table Created!');
-            res('')
-          })
-          .catch((e) => {
-            console.log('error ' + JSON.stringify(e));
-            rej('')
-          });
-        })
-        .catch((e) => {
-          alert('error ' + JSON.stringify(e));
-        });
-      })
-    })
-    .catch((e)=>{
-      console.log("Platform error",e)
-    })    
+        .catch((error) => alert(JSON.stringify(error)));
+    }); 
+  }
     
+
+
+
+
+
+  waitForDBAndTable() {
+    if (!this.isDbTableCreated) {
+      this.createDBAndTable()
+    }
+    else {
+      console.log("DB and Table Already present")
+    }
   }
 
-  async waitForDBAndTable(){
-    try{
-
-      await this.createDBAndTable()
-    }
-    catch(e){
-
-      console.log("Error Occured While creating DB & Table",e)
-    }
-  }
 
   getData(){
-     this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`)
-     .then((res)=>{
-       console.log("Data Fetched...",res)
-     })
-     .catch((e)=>{
-       console.log("Failed to fetch Data...",e)
-     })
-     
+  if (this.isDbTableCreated) {
+    return this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, []).then((res) => {
+      this.data = [];
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          console.log(i)
+          
+          // res.rows.item(i) is function which returns row as per the arguement. 
+          this.data.push(res.rows.item(i));
+        }
+        console.log(this.data);
+   
+      }
+      console.log("GET",res)
+    },(e) => {
+      alert(JSON.stringify(e));
+    });
+  }
+  else {
+    console.log("Database Not Created, Cant get Users Data")
   }
 
-  postData(name,age,email,pass){
-    let err;
-    let result;
-    this.dbObj.executeSql(`INSERT INTO ${this.table_name} VALUES (${name},${age},${email},${pass})`)
-    .then((res)=>{
-      result = res;
-      console.log("Data posted Sucessfully...",res)
-      return result;
-    })
-    .catch((e)=>{
-      console.log("Failed to post Data",e)
-      err = e
-      return err;
-    })
+  }
+
+  postData(name, pass){
+    if (this.isDbTableCreated) {
+      this.dbObj.executeSql(`
+      INSERT INTO ${this.table_name} (name, pass) VALUES ('${name}', '${pass}')`, [])
+        .then(() => {
+          console.log("Insertec Successfully");
+          this.getData();
+        }, (e) => {
+          console.log("Insertion Failed",JSON.stringify(e));
+        });
+    }
+    else {
+      console.log("Database Not Created, Cant Post Users Data")
+    }
+
+  }
+
+  deleteData(id){
+
+    if (this.isDbTableCreated) {
+      this.dbObj.executeSql(`DELETE FROM ${this.table_name} WHERE ID=${id}`, [])
+        .then((res) => {
+          console.log("Deleted From Table", res)
+        })
+        .catch((e) => {
+          console.log("Failed to delete row", JSON.stringify(e))
+        })
+    }
+    else {
+      console.log("Database Not Created, Cant delete Users Data")
+    }
+  }
+
+  updateData(id, userObj){
+    if (this.isDbTableCreated) {
+      this.dbObj.executeSql(`UPDATE ${this.table_name} SET Name=${userObj.name} Email=${userObj.email} Password=${userObj.pass} WHERE id=${id}`, [])
+        .then((res) => {
+          console.log("User Updated Sucessfully...", res)
+        })
+        .catch((e) => {
+          console.log("Failed to update user", JSON.stringify(e))
+        })
+    }
+    else {
+      console.log("Database Not Created, Cant Update Users Data")
+    }
+
+  }
+
+  dropTable(){
+    this.dbObj.executeSql(`DROP ${this.table_name}`, [])
+      .then((res) => {
+        console.log("Table Deleted", res)
+      })
+      .catch((e) => {
+        console.log("Err occured while deleting table", e)
+      })
   }
 
 }

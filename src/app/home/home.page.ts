@@ -1,5 +1,5 @@
 import { SqliteService } from './../services/sqlite.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
@@ -11,30 +11,42 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class HomePage implements OnInit {
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    age: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
     pass: new FormControl('', [Validators.required]),
   });
 
   user:any = {}
   usersData:any;
+
   constructor(public sql:SqliteService) {
   }
 
   ngOnInit(){
-    
+    this.getUsers();
   }
 
-  getFormData(){
-    this.user = this.userForm.value
-    console.log("User : ",this.user)
-    this.postData()
+  getUsers(){
+    this.usersData = this.sql.getData()
+    console.log("Users Data Got",this.usersData)
   }
 
-  postData(){
-    let data = this.userForm.value
-    this.sql.postData(data.name,data.age,data.email,data.pass)
-
-    // console.log("Post Data RESULT,",result)
+   createUser(){
+    let {name,pass} = this.userForm.value
+    console.log("name:",name)
+    console.log("pass:",pass)
+    this.sql.postData(name,pass)
+    // this.clearForm()
   }
+
+  updateUser(id,userObj){
+    this.sql.updateData(id,userObj) 
+  }
+
+  deleteUser(id){
+    this.sql.deleteData(id)
+  }
+  clearForm(){
+    this.userForm.reset()
+    console.log("Form Cleared...")
+  }
+
 }
