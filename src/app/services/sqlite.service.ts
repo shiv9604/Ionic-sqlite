@@ -23,7 +23,7 @@ export class SqliteService {
     public platform:Platform
     ) 
   {
-    this.waitForDBAndTable()
+    this.waitForDBAndTable();
   }
 
   ngOnInit() {
@@ -52,8 +52,7 @@ export class SqliteService {
             `
         CREATE TABLE IF NOT EXISTS ${this.table_name}  (
           user_id INTEGER NOT NULL AUTO_INCREMENT, 
-          Name varchar(100) NOT NULL,
-          Email varchar(100) NOT NULL,
+          User Name varchar(100) NOT NULL,
           Password varchar(100) NOT NULL)
           PRIMARY_KEY(user_id)
         `,

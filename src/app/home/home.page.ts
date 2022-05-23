@@ -10,8 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class HomePage implements OnInit {
   userForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
+    userName: new FormControl('', [Validators.required]),
     pass: new FormControl('', [Validators.required]),
   });
 
@@ -21,7 +20,7 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit(){
-    this.getUsers()
+    // this.getUsers()
   }
 
   async getUsers(){
