@@ -22,11 +22,19 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit(){
-
+    
   }
 
   getFormData(){
     this.user = this.userForm.value
     console.log("User : ",this.user)
+    this.postData()
+  }
+
+  postData(){
+    let data = this.userForm.value
+    this.sql.postData(data.name,data.age,data.email,data.pass)
+
+    // console.log("Post Data RESULT,",result)
   }
 }

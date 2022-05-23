@@ -93,11 +93,29 @@ export class SqliteService {
 
   getData(){
      this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`)
+     .then((res)=>{
+       console.log("Data Fetched...",res)
+     })
+     .catch((e)=>{
+       console.log("Failed to fetch Data...",e)
+     })
      
   }
 
-  postData(id,name,email,pass){
-    return this.dbObj.executeSql(`INSERT INTO ${this.table_name}(${id},${name},${email},${pass})`)
+  postData(name,age,email,pass){
+    let err;
+    let result;
+    this.dbObj.executeSql(`INSERT INTO ${this.table_name} VALUES (${name},${age},${email},${pass})`)
+    .then((res)=>{
+      result = res;
+      console.log("Data posted Sucessfully...",res)
+      return result;
+    })
+    .catch((e)=>{
+      console.log("Failed to post Data",e)
+      err = e
+      return err;
+    })
   }
 
 }
