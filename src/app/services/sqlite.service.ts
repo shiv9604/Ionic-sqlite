@@ -1,4 +1,4 @@
-import { isDataSource } from '@angular/cdk/collections';
+
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Platform } from '@ionic/angular';

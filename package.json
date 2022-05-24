@@ -80,8 +80,8 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-sqlite-storage": {},
-      "cordova-plugin-device": {}
+      "cordova-plugin-device": {},
+      "cordova-sqlite-storage": {}
     },
     "platforms": [
       "ios",
