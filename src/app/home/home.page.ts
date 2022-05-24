@@ -1,5 +1,5 @@
 import { SqliteService } from './../services/sqlite.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Platform } from '@ionic/angular';
@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
   }
   
 
-    getUsers(){
+  getUsers(){
     this.usersData = this.sql.getData()
     // this.getUsersList()
     console.log("Users Data Got",this.usersData)
