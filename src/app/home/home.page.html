@@ -6,7 +6,7 @@
   <h3>Ionic SQLite</h3>
 
   <h4>User Form</h4>
-  <form [formGroup]="userForm" (ngSubmit)="createUser()" #loginForm>
+  <form [formGroup]="userForm" (ngSubmit)="postData()" #loginForm>
 
     <mat-form-field appearance="legacy">
     <mat-label>User Name</mat-label>
@@ -41,15 +41,15 @@
 
 
     <span *ngIf="usersData">
-      <tbody  *ngFor="let user of usersData">
+      <tbody  *ngFor="let user of data">
     </span>
     <tbody #table *ngIf="!usersData">
       <td>{{user.id ? user.id : 1}}</td>
       <td>{{user.name ? user.name : "Shiv"}}</td>
       <td>{{user.pass ? user.pass : "Saikiran@9604"}}</td>
       <td fxLayout>
-        <mat-icon style="color:rgb(5, 57, 153)" (click)="updateUser(user.id,user)">edit</mat-icon>
-        <mat-icon style="color:lightcoral" (click)="deleteUser(user.id)">delete</mat-icon>
+        <mat-icon style="color:rgb(5, 57, 153)" (click)="updateData(user.id,user)">edit</mat-icon>
+        <mat-icon style="color:lightcoral" (click)="deleteData(user.id)">delete</mat-icon>
       </td>
     </tbody>
   </table>
