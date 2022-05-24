@@ -23,7 +23,11 @@ export class SqliteService {
     public sqlite: SQLite,
     public platform: Platform
   ) {
-    this.waitForDBAndTable();
+    this.platform.ready().then(() => {
+      this.createDBAndTable();
+    }).catch(error => {
+      console.log(error);
+    })
   }
 
   ngOnInit() {
@@ -71,28 +75,27 @@ export class SqliteService {
 
 
   getData(){
-  if (this.isDbTableCreated) {
-    return this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, []).then((res) => {
-      this.data = [];
-      if (res.rows.length > 0) {
-        for (var i = 0; i < res.rows.length; i++) {
-          console.log(i)
-          
-          // res.rows.item(i) is function which returns row as per the arguement. 
-          this.data.push(res.rows.item(i));
+    if (this.isDbTableCreated) {
+      this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, []).then((res) => {
+        // this.data = [];
+        console.log(res.rows.length)
+        if (res.rows.length > 0) {
+          for (var i = 0; i < res.rows.length; i++) {
+            
+            // res.rows.item(i) is function which returns row as per the arguement. 
+            this.data.push(res.rows.item(i));
+          }
+          console.log("Get Data Called in service...",this.data);
+         
         }
-        console.log(this.data);
-   
-      }
-      console.log("GET",res)
-    },(e) => {
-      alert(JSON.stringify(e));
-    });
-  }
-  else {
-    console.log("Database Not Created, Cant get Users Data")
-  }
-
+      },(e) => {  
+        alert(JSON.stringify(e));
+      });
+    }
+    else {
+      console.log("Database Not Created, Cant get Users Data")
+    }
+    return this.data;
   }
 
   postData(name, pass){
