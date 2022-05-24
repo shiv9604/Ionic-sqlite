@@ -20,21 +20,27 @@ export class HomePage implements OnInit {
   constructor(public sql:SqliteService) {
   }
 
-  ngOnInit(){
-    this.getUsers();
+  ngOnInit() {
+    
   }
 
-  getUsers(){
-    this.usersData = this.sql.getData()
-    console.log("Users Data Got",this.usersData)
+  ionViewDidEnter(){
+    this.getUsers();
   }
+  
+
+    getUsers(){
+    this.usersData = this.sql.getData()
+    // this.getUsersList()
+    console.log("Users Data Got",this.usersData)
+   }
 
    createUser(){
     let {name,pass} = this.userForm.value
     console.log("name:",name)
     console.log("pass:",pass)
     this.sql.postData(name,pass)
-    // this.clearForm()
+    this.clearForm()
   }
 
   updateUser(id,userObj){
@@ -44,9 +50,14 @@ export class HomePage implements OnInit {
   deleteUser(id){
     this.sql.deleteData(id)
   }
+
   clearForm(){
     this.userForm.reset()
     console.log("Form Cleared...")
+  }
+
+  getUsersList(){
+    this.usersData = this.sql.data
   }
 
 }
