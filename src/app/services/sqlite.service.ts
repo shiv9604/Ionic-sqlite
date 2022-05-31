@@ -23,11 +23,11 @@ export class SqliteService {
     public sqlite: SQLite,
     public platform: Platform
   ) {
-    this.platform.ready().then(() => {
-      this.createDBAndTable();
-    }).catch(error => {
-      console.log(error);
-    })
+    // this.platform.ready().then(() => {
+    //   this.createDBAndTable();
+    // }).catch(error => {
+    //   console.log(error);
+    // })
   }
 
   ngOnInit() {
@@ -75,6 +75,7 @@ export class SqliteService {
 
 
   getData(){
+    console.log("get",this.isDbTableCreated,"***",`SELECT * FROM ${this.table_name}`)
     if (this.isDbTableCreated) {
       this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, []).then((res) => {
         // this.data = [];
