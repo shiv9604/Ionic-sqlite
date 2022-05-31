@@ -23,7 +23,7 @@ export class SqliteService {
     public sqlite: SQLite,
     public platform: Platform
   ) {
-    this.waitForDBAndTable();
+    
   }
 
   ngOnInit() {
@@ -37,6 +37,7 @@ export class SqliteService {
           location: 'default'
         }).then((sqLite: SQLiteObject) => {
           this.dbObj = sqLite;
+          console.log("Database Created")
           sqLite.executeSql(`
               CREATE TABLE IF NOT EXISTS ${this.table_name} (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -44,9 +45,9 @@ export class SqliteService {
                 pass varchar(255)
               )`, [])
             .then((res) => {
-              console.log(JSON.stringify(res));
-              this.isDbTableCreated = true
+              // console.log(JSON.stringify(res));
               console.log("Table Created",this.isDbTableCreated)
+              this.isDbTableCreated = true
             })
             .catch((error) => alert(JSON.stringify(error)));
 
@@ -76,12 +77,13 @@ export class SqliteService {
       this.data = [];
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
-          console.log(i)
+          // console.log(i) 
           
           // res.rows.item(i) is function which returns row as per the arguement. 
           this.data.push(res.rows.item(i));
         }
-        console.log(this.data);
+        console.log("Data Get Function CAlled",this.data);
+        return this.data
    
       }
       console.log("GET",res)
@@ -100,7 +102,7 @@ export class SqliteService {
       this.dbObj.executeSql(`
       INSERT INTO ${this.table_name} (name, pass) VALUES ('${name}', '${pass}')`, [])
         .then(() => {
-          console.log("Insertec Successfully");
+          console.log("Inserted Successfully");
           this.getData();
         }, (e) => {
           console.log("Insertion Failed",JSON.stringify(e));
