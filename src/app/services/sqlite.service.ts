@@ -62,8 +62,6 @@ export class SqliteService {
 
 
 
-
-
   waitForDBAndTable() {
     if (!this.isDbTableCreated) {
       this.createDBAndTable()
