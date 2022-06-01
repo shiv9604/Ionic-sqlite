@@ -103,7 +103,8 @@ export class SqliteService {
       INSERT INTO ${this.table_name} (name, pass) VALUES ('${name}', '${pass}')`, [])
         .then(() => {
           console.log("Inserted Successfully");
-          this.getData();
+          let list = this.getData();
+          return list;
         }, (e) => {
           console.log("Insertion Failed",JSON.stringify(e));
         });
