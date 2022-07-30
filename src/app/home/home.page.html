@@ -1,6 +1,6 @@
 
 <ion-content [fullscreen]="true">
-  
+<!--   
 <div fxLayout="column" fxLayoutAlign="center center" class="main">
 
   <h3>Ionic SQLite</h3>
@@ -39,15 +39,10 @@
       </tr>
     </thead>
 
-
-    <!-- <span *ngIf="usersData">
-      <tbody  *ngFor="let user of usersData">
-    </span> -->
-    <!-- <tbody #table *ngIf="!usersData"> -->
     <tbody  *ngFor="let user of usersData">
-      <td>{{user.id ? user.id : "Id Not Found"}}</td>
-      <td>{{user.name ? user.name : "Name Not Found"}}</td>
-      <td>{{user.pass ? user.pass : "Password Not Found"}}</td>
+      <td>{{user.id}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.pass}}</td>
       <td fxLayout>
         <mat-icon style="color:rgb(5, 57, 153)" (click)="updateUser(user.id,user)">edit</mat-icon>
         <mat-icon style="color:lightcoral" (click)="deleteUser(user.id)">delete</mat-icon>
@@ -56,7 +51,15 @@
   </table>
 </div>
 
+</div> -->
 
+<div class="oprations" fxLayout="column" fxLayoutGap="30px" fxLayoutAlign="center center">
+  <button mat-flat-button color="primary" (click)="getUsers()">Get</button>
+  <button mat-flat-button color="primary" (click)="createUser()">Create</button>
+  <button mat-flat-button color="primary" (click)="updateUser()">Update</button>
+  <button mat-flat-button color="primary" (click)="deleteUser()">Delete</button>
+  
+  
 </div>
 
 </ion-content>

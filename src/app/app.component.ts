@@ -17,9 +17,8 @@ export class AppComponent {
 
   async initialize(){
     await this.platform.ready().then((res)=>{
-     this.sql.waitForDBAndTable();  
+     this.sql.createDBAndTable();  
     })
   }
-
-
+  
 }

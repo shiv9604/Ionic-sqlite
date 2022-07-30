@@ -46,8 +46,8 @@ export class SqliteService {
               )`, [])
             .then((res) => {
               // console.log(JSON.stringify(res));
-              console.log("Table Created",this.isDbTableCreated)
               this.isDbTableCreated = true
+              console.log("Table Created",this.isDbTableCreated)
             })
             .catch((error) => alert(JSON.stringify(error)));
 
@@ -72,8 +72,8 @@ export class SqliteService {
 
 
   getData(){
-  if (this.isDbTableCreated) {
-    return this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, []).then((res) => {
+    return this.dbObj.executeSql(`SELECT * FROM ${this.table_name}`, [])
+    .then((res) => {
       this.data = [];
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
@@ -84,67 +84,47 @@ export class SqliteService {
         }
         console.log("Data Get Function CAlled",this.data);
         return this.data
-   
       }
       console.log("GET",res)
     },(e) => {
       alert(JSON.stringify(e));
     });
   }
-  else {
-    console.log("Database Not Created, Cant get Users Data")
-  }
-
-  }
 
   postData(name, pass){
-    if (this.isDbTableCreated) {
       this.dbObj.executeSql(`
       INSERT INTO ${this.table_name} (name, pass) VALUES ('${name}', '${pass}')`, [])
-        .then(() => {
-          console.log("Inserted Successfully");
-          let list = this.getData();
-          return list;
+        .then(async (res) => {
+          console.log("Inserted Successfully",res);
+          let getData = await this.getData();
+          console.log("Data got in post func",getData)
+          return getData
         }, (e) => {
           console.log("Insertion Failed",JSON.stringify(e));
         });
-    }
-    else {
-      console.log("Database Not Created, Cant Post Users Data")
-    }
-
   }
 
   deleteData(id){
-
-    if (this.isDbTableCreated) {
-      this.dbObj.executeSql(`DELETE FROM ${this.table_name} WHERE ID=${id}`, [])
+      this.dbObj.executeSql(`DELETE FROM ${this.table_name} WHERE user_id=${id}`, [])
         .then((res) => {
           console.log("Deleted From Table", res)
         })
         .catch((e) => {
           console.log("Failed to delete row", JSON.stringify(e))
         })
-    }
-    else {
-      console.log("Database Not Created, Cant delete Users Data")
-    }
   }
 
   updateData(id, userObj){
-    if (this.isDbTableCreated) {
-      this.dbObj.executeSql(`UPDATE ${this.table_name} SET Name=${userObj.name} Email=${userObj.email} Password=${userObj.pass} WHERE id=${id}`, [])
+
+      // this.dbObj.executeSql(`UPDATE ${this.table_name} SET name=?, pass=? WHERE user_id=${id}`, [userObj.name,userObj.pass])
+      
+      this.dbObj.executeSql(`UPDATE ${this.table_name} SET name=?, pass=? WHERE user_id=?`,[userObj.name,userObj.pass,id])
         .then((res) => {
           console.log("User Updated Sucessfully...", res)
         })
         .catch((e) => {
           console.log("Failed to update user", JSON.stringify(e))
         })
-    }
-    else {
-      console.log("Database Not Created, Cant Update Users Data")
-    }
-
   }
 
   dropTable(){
